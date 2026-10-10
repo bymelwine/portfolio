@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#113b56"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-opacity=".35"/></filter></defs>
+  <rect width="1200" height="720" fill="url(#g)"/>
+  <g fill="none" stroke="#1bd7ff" stroke-width="4" opacity=".5"><path d="M160 360h220M820 360h220M600 150v130M600 440v130"/></g>
+  <g filter="url(#s)">
+    <rect x="430" y="255" width="340" height="210" rx="28" fill="#0b1727" stroke="#2be4ff" stroke-width="3"/>
+    <text x="600" y="335" text-anchor="middle" fill="#fff" font-family="Segoe UI,Arial" font-size="42" font-weight="700">defense.corp</text>
+    <text x="600" y="388" text-anchor="middle" fill="#a8c7dc" font-family="Segoe UI,Arial" font-size="25">AD DS • DNS • GPO • Audit</text>
+    <text x="600" y="426" text-anchor="middle" fill="#52f2b4" font-family="Segoe UI,Arial" font-size="22">Identity + OS hardening</text>
+  </g>
+  <g font-family="Segoe UI,Arial" text-anchor="middle">
+    <rect x="80" y="285" width="280" height="150" rx="24" fill="#12304b" stroke="#75b8ff"/><text x="220" y="345" fill="#fff" font-size="32" font-weight="700">Windows Server</text><text x="220" y="392" fill="#a8c7dc" font-size="22">AD • Policies • Logs</text>
+    <rect x="840" y="285" width="280" height="150" rx="24" fill="#183622" stroke="#55e899"/><text x="980" y="345" fill="#fff" font-size="32" font-weight="700">Ubuntu Server</text><text x="980" y="392" fill="#b8dbc5" font-size="22">SSH • PAM • sudo</text>
+    <rect x="460" y="70" width="280" height="110" rx="22" fill="#3b173d" stroke="#db74ff"/><text x="600" y="118" fill="#fff" font-size="29" font-weight="700">Access Control</text><text x="600" y="153" fill="#e4bdfa" font-size="20">admin / employees</text>
+    <rect x="460" y="540" width="280" height="110" rx="22" fill="#3b2712" stroke="#ffc45c"/><text x="600" y="588" fill="#fff" font-size="29" font-weight="700">Attack Validation</text><text x="600" y="623" fill="#f6d8a3" font-size="20">SSH • lockout • audit</text>
+  </g>
+</svg>

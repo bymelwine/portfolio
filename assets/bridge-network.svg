@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#08121c"/><stop offset="1" stop-color="#122b48"/></linearGradient></defs>
+  <rect width="1200" height="720" fill="url(#g)"/>
+  <g stroke="#32ddff" stroke-width="6" fill="none" opacity=".65"><path d="M270 300h225M705 300h225M600 365v155"/><path d="M600 180v70"/></g>
+  <g font-family="Segoe UI,Arial" text-anchor="middle">
+    <rect x="420" y="250" width="360" height="180" rx="30" fill="#0c1e30" stroke="#38e6ff" stroke-width="3"/><text x="600" y="325" fill="#fff" font-size="44" font-weight="700">Linux Bridge</text><text x="600" y="378" fill="#afcada" font-size="24">veth • namespaces • routes</text>
+    <rect x="80" y="235" width="220" height="140" rx="24" fill="#13283e" stroke="#6aabff"/><text x="190" y="296" fill="#fff" font-size="28" font-weight="700">namespace A</text><text x="190" y="338" fill="#b4ccde" font-size="20">veth-a</text>
+    <rect x="900" y="235" width="220" height="140" rx="24" fill="#13283e" stroke="#6aabff"/><text x="1010" y="296" fill="#fff" font-size="28" font-weight="700">namespace B</text><text x="1010" y="338" fill="#b4ccde" font-size="20">veth-b</text>
+    <rect x="465" y="70" width="270" height="110" rx="22" fill="#163527" stroke="#55e899"/><text x="600" y="118" fill="#fff" font-size="28" font-weight="700">Host network</text><text x="600" y="151" fill="#bee0ca" font-size="20">routing + NAT</text>
+    <rect x="445" y="520" width="310" height="120" rx="22" fill="#3d2512" stroke="#ffbd5c"/><text x="600" y="568" fill="#fff" font-size="29" font-weight="700">Port publishing</text><text x="600" y="606" fill="#f4d2a0" font-size="20">end-to-end validation</text>
+  </g>
+</svg>
