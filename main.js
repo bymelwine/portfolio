@@ -83,7 +83,7 @@
     add(body,info(tr('projectContext'),c.context),info(tr('projectMethod'),c.steps),info(tr('projectLearning'),c.learning),info(tr('projectLimits'),c.limits));
     if(p.id==='wallix') add(body,workflow());
     add(body,galleryBlock(p));
-    if(p.repo){const container=el('div','case-info repo-block'); const a=el('a','text-link',tr('repoProject')); a.href=p.repo;a.target='_blank';a.rel='noopener noreferrer'; add(container,a);add(body,container);}
+    if(p.repo && p.featured){const container=el('div','case-info repo-block'); const a=el('a','text-link',tr('repoProject')); a.href=p.repo;a.target='_blank';a.rel='noopener noreferrer'; add(container,a);add(body,container);}
     return body;
   }
   function createCase(p){
@@ -111,10 +111,12 @@
     }
     else add(card,el('div','empty-media','{ }  '+langValue('LAB DOCUMENTÉ','DOCUMENTED LAB')));
     const content=el('div','more-card-body');
-    add(content,el('p','card-eyebrow',`${langValue(p.period,p.periodEN)} · ${tr('projectTypeAcademic')}`),el('h3','',c.title),el('p','',c.summary),tools(p.tools.slice(0,5)));
+    add(content,el('p','card-eyebrow',`${langValue(p.period,p.periodEN)} · ${p.kind==='personal'?tr('projectTypePersonal'):tr('projectTypeAcademic')}`),el('h3','',c.title),el('p','',c.summary),tools(p.tools.slice(0,5)));
     const details=el('details'),summary=el('summary','',tr('projectOpen'));details.open=state.detailed;
     details.addEventListener('toggle',()=>summary.textContent=details.open?tr('projectClose'):tr('projectOpen'));
-    add(details,summary,caseBody(p));add(content,details);add(card,content);return card;
+    add(details,summary,caseBody(p));add(content,details);
+    if(p.repo){const link=el('a','text-link',tr('repoProject'));link.href=p.repo;link.target='_blank';link.rel='noopener noreferrer';link.style.marginTop='12px';add(content,link);}
+    add(card,content);return card;
   }
   function renderProjects(){
     const featured=$('#featured-projects'), more=$('#more-projects');featured.replaceChildren();more.replaceChildren();
@@ -129,29 +131,62 @@
       const a=el('a','text-link',tr('experienceLink'));a.href='#case-'+p.id;add(body,a);add(row,body);add(root,row);
     });
   }
-  function renderSkills(){const root=$('#skills-grid');root.replaceChildren();
-    data.skills.forEach(item=>{const [title,description,tech,proof]=item[state.lang],card=el('article','skill-card');add(card,el('h3','',title),el('p','',description),el('div','skill-tools',tech));const a=el('a','text-link',proof+' ↗');a.href='#case-'+item.anchor;add(card,a);add(root,card);});
+  function renderSkills(){
+    const root=$('#skills-grid');root.replaceChildren();
+    data.skills.forEach(item=>{
+      const [title,description,tech,proof]=item[state.lang];
+      const card=el('article','skill-card');
+      add(card,el('h3','',title),el('p','',description),el('div','skill-tools',tech));
+      const wrap=el('div','skill-links');
+      const links=item.links || [{fr:proof,en:proof,href:'#case-'+item.anchor}];
+      links.forEach(link=>{
+        const text=state.lang==='fr'?link.fr:link.en;
+        const a=el('a','text-link',text+' ↗');
+        a.href=link.href;
+        if(/^https?:\/\//.test(link.href)){
+          a.target='_blank';a.rel='noopener noreferrer';
+        }
+        add(wrap,a);
+      });
+      add(card,wrap);add(root,card);
+    });
   }
   function renderCerts(){
     const root=$('#cert-grid');root.replaceChildren();
     data.certifications.forEach(c=>{
       const card=el('article','cert-card'),visual=el(c.link?'a':'div','cert-artwork'),copy=el('div','cert-copy');
-      if(c.link){visual.href=c.link;visual.target='_blank';visual.rel='noopener noreferrer';visual.setAttribute('aria-label',langValue('Consulter le badge sur Credly : ','View badge on Credly: ')+c.name);}
+      if(c.link){visual.href=c.link;visual.target='_blank';visual.rel='noopener noreferrer';visual.setAttribute('aria-label',c.kind==='course'?langValue('Voir le certificat de formation : ','View course certificate: ')+c.name:langValue('Consulter le badge sur Credly : ','View badge on Credly: ')+c.name);}
       if(c.icon){
-        const logo=el('img');logo.src=c.icon;logo.alt=langValue('Visuel du badge ','Badge artwork: ')+c.name;
+        const logo=el('img');logo.src=c.icon;logo.alt=(c.kind==='course'?langValue('Illustration de l’attestation de formation ','Course certificate preview: '):langValue('Visuel du badge ','Badge artwork: '))+c.name;
         logo.width=170;logo.height=150;logo.loading='lazy';logo.decoding='async';add(visual,logo);
       } else {visual.textContent=c.initials;}
       add(copy,el('p','cert-issuer',c.issuer),el('h3','',c.name),el('p','cert-date',langValue(c.dateFR,c.dateEN)));
-      if(c.link){const a=el('a','text-link',tr('checkCredential'));a.href=c.link;a.target='_blank';a.rel='noopener noreferrer';add(copy,a);}
+      if(c.link){const a=el('a','text-link',c.kind==='course'?langValue('Voir le certificat ↗','View course certificate ↗'):tr('checkCredential'));a.href=c.link;a.target='_blank';a.rel='noopener noreferrer';add(copy,a);}
       add(card,visual,copy);add(root,card);
     });
     const edu=$('#education-list');edu.replaceChildren();
-    data.education.forEach(e=>{const row=el('div','edu-item');add(row,el('span','',e.date));const info=el('div');add(info,el('strong','',e[state.lang]),el('small','',e.place));add(row,info);add(edu,row);});
+    data.education.forEach(e=>{
+      const row=el('div','edu-item');
+      const info=el('div');
+      add(row,el('span','',e.date));
+      add(info,el('strong','',e[state.lang]),el('small','',e.place));
+      if(e.modules && e.modules[state.lang]){
+        const container=el('div','edu-modules');
+        e.modules[state.lang].forEach(group=>{
+          const paragraph=el('p','edu-module');
+          add(paragraph,el('span','edu-module-label',group.title+' : '),el('span','edu-module-content',group.items));
+          add(container,paragraph);
+        });
+        add(info,container);
+      }
+      add(row,info);
+      add(edu,row);
+    });
   }
   function translateStatic(){document.documentElement.lang=state.lang;
     document.querySelectorAll('[data-i18n]').forEach(node=>{const key=node.dataset.i18n;if(tr(key)) node.textContent=tr(key);});
     document.title=state.lang==='fr'?'Melwine LANKOANDE · Portfolio Cybersécurité | PFE 2027':'Melwine LANKOANDE · Cybersecurity Portfolio | 2027 Internship';
-    $('meta[name="description"]').content=state.lang==='fr'?"Portfolio de Melwine LANKOANDE : IAM/PAM, WALLIX, SOC, Suricata, Cloud Security et sécurité IoT. PFE dès janvier 2027.":'Cybersecurity engineering portfolio: IAM/PAM, WALLIX, SOC, Suricata, cloud and IoT security. Available for a 2027 internship.';
+    $('meta[name="description"]').content=state.lang==='fr'?"Portfolio de Melwine LANKOANDE : stages, projets et réalisations en cybersécurité. Recherche de stage PFE dès janvier 2027.":'Melwine LANKOANDE cybersecurity portfolio: internships, technical projects and hands-on work. Seeking a final-year internship from January 2027.';
     const b=$('#language-toggle');b.textContent=state.lang==='fr'?'EN':'FR';b.setAttribute('aria-label',state.lang==='fr'?'Switch to English':'Passer en français');
     $('.main-nav').setAttribute('aria-label',langValue('Navigation principale','Main navigation'));
     $('.brand').setAttribute('aria-label',langValue('Melwine LANKOANDE — accueil','Melwine LANKOANDE — home'));
